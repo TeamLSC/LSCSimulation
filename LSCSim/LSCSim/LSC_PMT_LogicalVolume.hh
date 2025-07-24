@@ -94,6 +94,9 @@ public:
                             // OK to set MaskMat == NULL for no mask
       G4VSensitiveDetector * detector // sensitive detector hook
   );
+  void SetLightConcentrator(G4int f) { fLightConcentrator = f; }
+private:
+  G4int fLightConcentrator = 1;
 };
 
 

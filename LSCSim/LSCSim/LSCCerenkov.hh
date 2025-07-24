@@ -176,6 +176,12 @@ public:
 
   virtual void SetNewValue(G4UIcommand *, G4String);
 
+  void InitializeCerenkov() {
+    fMaxBetaChange = 0.;
+    fMaxPhotons = 0;
+    fNumPhotons = 0;
+  }
+
 protected:
   G4PhysicsTable * thePhysicsTable;
 

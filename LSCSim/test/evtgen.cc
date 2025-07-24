@@ -11,6 +11,8 @@ G4String fn_source = "source.dat";
 G4String fn_solar  = "solar.dat";
 G4String fn_reactor= "reactor.dat";
 
+G4String detshape = "sphere";
+
 bool exists(const G4String &fname);
 int reactor(int nevent, double Ev);
 int source(int nevent, double Ev, bool flag_uniform_vtx=false);
@@ -33,7 +35,7 @@ int main(int argc, char** argv)
     G4String evt_type = "reactor";
     G4String fn_setting;
 
-    while ((opt = getopt(argc, argv, "t:n:g:e:s:h")) != -1) {
+    while ((opt = getopt(argc, argv, "t:n:g:e:s:h:d")) != -1) {
         switch (opt) {
             case 't': evt_type = G4String(optarg); break;
             case 'n': nevent = atoi(optarg); break;
@@ -53,6 +55,7 @@ int main(int argc, char** argv)
                     fn_reactor = G4String(optarg); 
                 }
                 break;
+            case 'd': detshape= G4String(optarg); break;
             case 'h': PrintHelp(); break;
             default: PrintHelp();
         }
@@ -70,6 +73,7 @@ int main(int argc, char** argv)
 int reactor(int nevent, double Ev)
 {
     LSCEventGen_IBD* evtgen = new LSCEventGen_IBD();
+    evtgen->SetDetShape(detshape);
     
     bool rndEv = false;
     if (Ev == -1) rndEv = true;
@@ -113,6 +117,7 @@ int reactor(int nevent, double Ev)
 int source(int nevent, double Ev, bool flag_uniform_vtx)
 {
     LSCEventGen_IBD* evtgen = new LSCEventGen_IBD();
+    evtgen->SetDetShape(detshape);
 
     bool rndEv = false;
     if (Ev == -1) rndEv = true;
@@ -169,6 +174,7 @@ int source(int nevent, double Ev, bool flag_uniform_vtx)
 int solar(int nevent, double Ev)
 {
     LSCEventGen_ve* evtgen = new LSCEventGen_ve();
+    evtgen->SetDetShape(detshape);
 
     bool rndEv = false;
     if (Ev == -1) rndEv = true;
@@ -215,6 +221,7 @@ int solar(int nevent, double Ev)
 int source_Cr51(int nevent, double Ev, bool flag_uniform_vtx)
 {
     LSCEventGen_ve* evtgen = new LSCEventGen_ve();
+    evtgen->SetDetShape(detshape);
 
     bool rndEv = false;
     if (Ev == -1) rndEv = true;

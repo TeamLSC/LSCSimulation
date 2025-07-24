@@ -317,7 +317,8 @@ void LSCPhysicsList::ConstructEM()
       //  Multiple scattering
       G4eMultipleScattering * msc = new G4eMultipleScattering();
       msc->SetStepLimitType(fUseDistanceToBoundary);
-      pmanager->AddProcess(msc, -1, 1, -1);
+      //pmanager->AddProcess(msc, -1, 1, -1);
+      pmanager->AddProcess(msc, -1, 1, 1);
 
       // Ionisation
       G4eIonisation * eIonisation = new G4eIonisation();
@@ -351,10 +352,14 @@ void LSCPhysicsList::ConstructEM()
     }
     else if (particleName == "mu+" || particleName == "mu-") {
       // muon
-      pmanager->AddProcess(new G4MuMultipleScattering, -1, 1, -1);
-      pmanager->AddProcess(new G4MuIonisation(), -1, 2, 1);
-      pmanager->AddProcess(new G4MuBremsstrahlung(), -1, -1, 2);
-      pmanager->AddProcess(new G4MuPairProduction(), -1, -1, 3);
+      //pmanager->AddProcess(new G4MuMultipleScattering, -1, 1, -1);
+      //pmanager->AddProcess(new G4MuIonisation(), -1, 2, 1);
+      //pmanager->AddProcess(new G4MuBremsstrahlung(), -1, -1, 2);
+      //pmanager->AddProcess(new G4MuPairProduction(), -1, -1, 3);
+      pmanager->AddProcess(new G4MuMultipleScattering, -1, 1, 1);
+      pmanager->AddProcess(new G4MuIonisation(), -1, 2, 2);
+      pmanager->AddProcess(new G4MuBremsstrahlung(), -1, -1, 3);
+      pmanager->AddProcess(new G4MuPairProduction(), -1, -1, 4);
       if (particleName == "mu-")
         pmanager->AddProcess(new G4MuonMinusCapture(), 0, -1, -1);
     }
@@ -366,10 +371,12 @@ void LSCPhysicsList::ConstructEM()
       // ionisation
       G4hIonisation * hIonisation = new G4hIonisation();
       hIonisation->SetStepFunction(0.2, 50 * um);
-      pmanager->AddProcess(hIonisation, -1, 2, 1);
+      //pmanager->AddProcess(hIonisation, -1, 2, 1);
+      pmanager->AddProcess(hIonisation, -1, 2, 2);
 
       // bremmstrahlung
-      pmanager->AddProcess(new G4hBremsstrahlung, -1, -3, 2);
+      //pmanager->AddProcess(new G4hBremsstrahlung, -1, -3, 2);
+      pmanager->AddProcess(new G4hBremsstrahlung, -1, -3, 3);
     }
     else if (particleName == "alpha" || particleName == "deuteron" ||
              particleName == "triton" || particleName == "He3") {
@@ -389,13 +396,15 @@ void LSCPhysicsList::ConstructEM()
       // genericIon:
 
       // multiple scattering
-      pmanager->AddProcess(new G4hMultipleScattering, -1, 1, -1);
+      //pmanager->AddProcess(new G4hMultipleScattering, -1, 1, -1);
+      pmanager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
 
       // ionisation
       G4ionIonisation * ionIoni = new G4ionIonisation();
       ionIoni->SetEmModel(new G4IonParametrisedLossModel());
       ionIoni->SetStepFunction(0.1, 20 * um);
-      pmanager->AddProcess(ionIoni, -1, 2, 1);
+      //pmanager->AddProcess(ionIoni, -1, 2, 1);
+      pmanager->AddProcess(ionIoni, -1, 2, 2);
     }
 
     else if ((!particle->IsShortLived()) && (charge != 0.0) &&
@@ -405,10 +414,12 @@ void LSCPhysicsList::ConstructEM()
       G4hIonisation * ahadronIon = new G4hIonisation();
 
       // multiple scattering
-      pmanager->AddProcess(aMultipleScattering, -1, 1, -1);
+      //pmanager->AddProcess(aMultipleScattering, -1, 1, -1);
+      pmanager->AddProcess(aMultipleScattering, -1, 1, 1);
 
       // ionisation
-      pmanager->AddProcess(ahadronIon, -1, 2, 1);
+      //pmanager->AddProcess(ahadronIon, -1, 2, 1);
+      pmanager->AddProcess(ahadronIon, -1, 2, 2);
     }
   }
 }
@@ -453,7 +464,7 @@ void LSCPhysicsList::ConstructOp()
   scint->AddSaturation(emSaturation);
 
   // Cerenkov
-  auto cerenkov = new LSCCerenkov();
+  auto cerenkov = new LSCCerenkov("Cerenkov");
   cerenkov->SetTrackSecondariesFirst(true);
 
   auto myParticleIterator = GetParticleIterator();

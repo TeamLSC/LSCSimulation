@@ -93,11 +93,12 @@ void LSCEventGen::GeneratePosition()
     double LS_Hmin = -(targetH/2 - targetT);
     double LS_Hmax = targetH/2 - targetT;
 
-    double rho_det = sqrt(G4UniformRand()) * LS_R;
-    double phi_det = G4UniformRand() * 2 * pi;
-    double z_det = G4UniformRand() * (LS_Hmax - LS_Hmin) + LS_Hmin;
-
-    _pos.setRhoPhiZ(rho_det, phi_det, z_det);
+    if (_det_shape == "cylinder") {
+        GeneratePosition_cylinder(LS_R, LS_Hmax - LS_Hmin);
+    }
+    else if (_det_shape == "sphere") {
+        GeneratePosition_sphere(LS_R);
+    }
 }
 
 
@@ -113,6 +114,22 @@ G4ThreeVector LSCEventGen::GeneratePosition_cylinder(double R, double H)
 
     G4ThreeVector pos;
     pos.setRhoPhiZ(rho_det, phi_det, z_det);
+    _pos = pos;
+
+    return pos;
+}
+
+
+G4ThreeVector LSCEventGen::GeneratePosition_sphere(double R)
+{
+    double x = G4UniformRand() * 2*R - R;
+    double y = G4UniformRand() * 2*R - R;
+    double z = G4UniformRand() * 2*R - R;
+
+    if (R*R < x*x + y*y + z*z)
+        return GeneratePosition_sphere(R);
+
+    G4ThreeVector pos(x, y, z);
     _pos = pos;
 
     return pos;

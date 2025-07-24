@@ -9,11 +9,11 @@ void digi_example()
 
   pmt->AddHitTime(0);
   pmt->SetModel(PMTSignal::MOYAL);
-  // pmt->Draw();
+  //pmt->Draw();
 
   auto fadc = new FADCWaveformGenerator();
   fadc->SetNBIT(12);
-  fadc->SetVpp(2500);
+  fadc->SetVpp(200);
   fadc->SetSamplingRate(500);
   fadc->SetTimeWindow(250);
   fadc->SetPedOffset(100);

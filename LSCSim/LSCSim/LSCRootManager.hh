@@ -17,6 +17,7 @@
 #include "MCObjs/MCPrimaryData.hh"
 #include "MCObjs/MCTrackData.hh"
 #include "MCObjs/MCScintData.hh"
+#include "MCObjs/MCCerenkovData.hh"
 #include "MCObjs/MCPMTData.hh"
 #include "MCObjs/MCEventInfo.hh"
 
@@ -59,17 +60,20 @@ private:
   G4UIcmdWithAString * fStepSaveOptCmd;
   G4UIcmdWithAString * fHitPhotonSaveCmd;
   G4UIcmdWithAString * fScintStepSaveCmd;
+  G4UIcmdWithAString * fCerenkovStepSaveCmd;
 
   G4int fTrackSaveOption;
   G4int fStepSaveOption;
   G4int fHitPhotonSave;
   G4int fScintStepSave;
+  G4int fCerenkovStepSave;
 
   G4int fPMTHitCollId;
 
   MCPrimaryData * fPrimaryData;
   MCTrackData * fTrackData;
   MCScintData * fScintData;
+  MCCerenkovData* fCerenkovData;
   MCPMTData * fPMTData;
   MCEventInfo * fEventInfo;
 

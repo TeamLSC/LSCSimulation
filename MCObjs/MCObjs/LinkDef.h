@@ -12,6 +12,9 @@
 #pragma link C++ class  MCScintStep+;
 #pragma link C++ class  MCScint+;
 #pragma link C++ class  MCScintData+;
+#pragma link C++ class  MCCerenkovStep+;
+#pragma link C++ class  MCCerenkov+;
+#pragma link C++ class  MCCerenkovData+;
 #pragma link C++ class  MCPhotonHit+;
 #pragma link C++ class  MCPMT+;
 #pragma link C++ class  MCPMTData+;

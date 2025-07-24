@@ -19,7 +19,7 @@ LSCScintillation::LSCScintillation(const G4String & processName,
                                    G4ProcessType type)
   : G4VRestDiscreteProcess(processName, type)
 {
-  SetProcessSubType(fScintillation);
+  SetProcessSubType(fScintillation); // 22
 
   fTrackSecondariesFirst = false;
 

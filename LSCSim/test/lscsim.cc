@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "G4RunManager.hh"
 #include "G4String.hh"
@@ -29,7 +30,7 @@ G4double GammaEnergies[15];
 void PrintHelp()
 {
   cout << endl;
-  cout << "Usage: LSCSim [-n # of event] [-o output] [-f macro]" << endl
+  cout << "Usage: lscsim [-n # of event] [-o output] [-f macro]" << endl
        << "              [-g geometry] [-p pmt_position data] [-m material] [-v macro]" << endl;
   cout << endl;
 
@@ -132,15 +133,16 @@ int main(int argc, char ** argv)
 
   
   if (!doVis) {
-    //command = Form("/run/beamOn %d", nevent);
-    //UImanager->ApplyCommand(command);
+    command = Form("/run/beamOn %d", nevent);
+    UImanager->ApplyCommand(command);
 
     G4UIsession * theSession = new G4UIterminal(new G4UItcsh);
-    theSession->SessionStart();
+    //theSession->SessionStart();
   }
   else if (doInt) {
     G4UIExecutive* ui = new G4UIExecutive(argc, argv);
-    UImanager->ApplyCommand("/control/execute mac/init_vis.mac");  
+    command = Form("/control/execute %s", vis_macroFileName.c_str());
+    UImanager->ApplyCommand(command);
     ui->SessionStart();
     delete ui;
   }

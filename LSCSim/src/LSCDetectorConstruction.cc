@@ -1,36 +1,18 @@
 #include "LSCSim/LSCDetectorConstruction.hh"
 
 #include "G4Box.hh"
-#include "G4GeometryManager.hh"
-#include "G4LogicalBorderSurface.hh"
-#include "G4LogicalSkinSurface.hh"
 #include "G4LogicalVolume.hh"
-#include "G4LogicalVolumeStore.hh"
 #include "G4Material.hh"
-#include "G4MaterialTable.hh"
-#include "G4NistManager.hh"
-#include "G4OpticalSurface.hh"
 #include "G4PVPlacement.hh"
 #include "G4PhysicalConstants.hh"
-#include "G4PhysicalVolumeStore.hh"
-#include "G4RegionStore.hh"
-#include "G4RunManager.hh"
 #include "G4SDManager.hh"
-#include "G4SolidStore.hh"
-#include "G4Sphere.hh"
 #include "G4String.hh"
-#include "G4SubtractionSolid.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
-#include "G4Tubs.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
-#include "G4UIdirectory.hh"
-#include "G4UImanager.hh"
-#include "G4UnionSolid.hh"
 #include "GLG4Sim/GLG4param.hh"
 #include "LSCSim/LSCPMTSD.hh"
-#include "LSCSim/LSC_PMT_LogicalVolume.hh"
 
 using namespace std;
 
@@ -49,11 +31,15 @@ LSCDetectorConstruction::LSCDetectorConstruction()
   fGeometryDataFileCmd = new G4UIcmdWithAString("/LSC/det/geometrydata", this);
   fPMTPositionDataFileCmd = new G4UIcmdWithAString("/LSC/det/pmtposdata", this);
   fWhichDetectorCmd = new G4UIcmdWithAString("/LSC/det/detector", this);
+  fLightConcentratorCmd = new G4UIcmdWithAnInteger("/LSC/det/lightconcentrator", this);
+  fLightConProfileCmd = new G4UIcmdWithAString("/LSC/det/lightconprofile", this);
 
   fGeometryDataFile = "";
   fPMTPositionDataFile = "";
   fMaterialDataFile = "";
-  fWhichDetector = "LS";
+  fWhichDetector = "";
+  fLightConcentrator = 0; // default is no light concentrator
+  fLightConProfile = "";
 }
 
 LSCDetectorConstruction::~LSCDetectorConstruction()
@@ -63,6 +49,9 @@ LSCDetectorConstruction::~LSCDetectorConstruction()
   delete fMaterialDataFileCmd;
   delete fGeometryDataFileCmd;
   delete fPMTPositionDataFileCmd;
+  delete fWhichDetectorCmd;
+  delete fLightConcentratorCmd;
+  delete fLightConProfileCmd;
 }
 
 void LSCDetectorConstruction::SetNewValue(G4UIcommand * command,
@@ -82,7 +71,16 @@ void LSCDetectorConstruction::SetNewValue(G4UIcommand * command,
   if (command == fPMTPositionDataFileCmd) {
     if (fPMTPositionDataFile.empty()) fPMTPositionDataFile = newValues;
   }
-  if (command == fWhichDetectorCmd) { fWhichDetector = newValues; }
+  if (command == fWhichDetectorCmd) {
+    if (fWhichDetector.empty()) fWhichDetector = newValues;
+  }
+  if (command == fLightConcentratorCmd) {
+    istringstream is(newValues);
+    is >> fLightConcentrator;
+  }
+  if (command == fLightConProfileCmd) {
+    if (fLightConProfile.empty()) fLightConProfile = newValues;
+  }
 }
 
 G4VPhysicalVolume * LSCDetectorConstruction::Construct()
@@ -123,8 +121,14 @@ G4VPhysicalVolume * LSCDetectorConstruction::ConstructDetector()
   LSCPMTSD * pmtSDInner = new LSCPMTSD("/LSC/PMT/inner");
   fSDman->AddNewDetector(pmtSDInner);
 
-  if (fWhichDetector == "LSC")
-    ConstructDetector_LSC(WorldPhys, pmtSDInner, geom_db);
+  if (fWhichDetector == "LSCC" || fWhichDetector == "CYLINDER") {
+    ConstructDetector_LSC_ExpHall(WorldPhys, geom_db);
+    ConstructDetector_LSC_Cylinder(WorldPhys, pmtSDInner, geom_db);
+  }
+  else if (fWhichDetector == "LSCS" || fWhichDetector == "SPHERE") {
+    ConstructDetector_LSC_ExpHall(WorldPhys, geom_db);
+    ConstructDetector_LSC_Sphere(WorldPhys, pmtSDInner, geom_db);
+  }
   else if (fWhichDetector == "PROTO")
     ConstructDetector_Prototype(WorldPhys, pmtSDInner, geom_db);
 

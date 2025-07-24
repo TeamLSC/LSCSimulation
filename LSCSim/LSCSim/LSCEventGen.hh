@@ -43,6 +43,7 @@ public:
 
     void GeneratePosition();
     G4ThreeVector GeneratePosition_cylinder(double R, double H);
+    G4ThreeVector GeneratePosition_sphere(double R);
     virtual void SetForm_HEPEvt() = 0;
     void Print_HEPEvt();
 
@@ -51,6 +52,7 @@ public:
     // set functions
     void SetSeed(long seed=-1);
     void SetPositionSource(G4ThreeVector pos) { _pos_source = pos; }
+    void SetDetShape(G4String detshape) { _det_shape = detshape; }
 
     // get functions
     long GetSeed() const { return _rseed; }
@@ -66,6 +68,7 @@ protected:
     G4ThreeVector _pos_source;
     G4String _fn_geometry;
     GLG4param& _geom_db = GLG4param::GetDB();
+    G4String _det_shape;
 
 private:
     long _rseed = 42;

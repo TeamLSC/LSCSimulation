@@ -22,14 +22,20 @@ void LSCTrackingAction::PreUserTrackingAction(const G4Track * aTrack)
   fpTrackingManager->SetUserTrackInformation(new LSCUserTrackInformation);
 
   //JW added
-  if (aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
-    return;
-  }
-  else if (fRecorder) fRecorder->RecordTrack(aTrack);
+  //if (aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
+  //  return;
+  //}
+  //else { 
+      if (fRecorder) fRecorder->RecordTrack(aTrack);
+  //}
 }
 
 void LSCTrackingAction::PostUserTrackingAction(const G4Track * aTrack)
 {
+  /*
+  G4cout << "PostUserTrackingAction for track ID: "
+         << aTrack->GetTrackID() << G4endl; // kmlee debug
+         */
   LSCTrajectory * trajectory =
       (LSCTrajectory *)fpTrackingManager->GimmeTrajectory();
   LSCUserTrackInformation * trackInformation =
@@ -43,7 +49,8 @@ void LSCTrackingAction::PostUserTrackingAction(const G4Track * aTrack)
       trajectory->SetDrawTrajectory(true);
     }
 
-    //if (trackInformation->GetTrackStatus() & hitPMT)
+    // check if the optical photon hits the PMT
+    if (trackInformation->GetTrackStatus() & hitPMT) 
       trajectory->SetDrawTrajectory(true);
   }
   // draw all other (not optical photon) trajectories

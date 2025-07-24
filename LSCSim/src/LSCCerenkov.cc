@@ -88,7 +88,7 @@ LSCCerenkov::LSCCerenkov(const G4String& processName, G4ProcessType type)
   , fNumPhotons(0)
 {
   secID = G4PhysicsModelCatalog::GetModelID("model_Cerenkov");
-  SetProcessSubType(fCerenkov);
+  SetProcessSubType(fCerenkov); // 21
 
   thePhysicsTable = nullptr;
 

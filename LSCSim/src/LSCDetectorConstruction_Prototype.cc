@@ -78,63 +78,6 @@ void LSCDetectorConstruction::ConstructDetector_Prototype(
       new G4PVPlacement(0, G4ThreeVector(), TargetLSLog, "TargetLSPhys",
                         TargetTankLog, false, 0, fGeomCheck);
 
-  ///////////////////////////////////////////////////////////////////////////
-  // --- make the fundamental inner  PMT assembly
-  ///////////////////////////////////////////////////////////////////////////
-  auto _logiInnerPMT = new LSC_10inch_LogicalVolume(
-      "InnerPMT", G4Material::GetMaterial("Water"),
-      G4Material::GetMaterial("Glass"), Photocathode_opsurf,
-      G4Material::GetMaterial("PMT_Vac"), G4Material::GetMaterial("Steel"),
-      nullptr,
-      pmtsd); // sensitive detector hook
 
-  if (fPMTPositionDataFile.empty()) {
-    G4String msg = "Error, pmt position data file could not be opened.\n";
-    G4cerr << msg << G4endl;
-    G4Exception("LSCDetectorConstruction::LSCDetectorConstruction", "",
-                FatalException, msg);
-  }
-
-  char PMTname[64];
-
-  double coord_x, coord_y, coord_z;
-  int pmtno, nring, region;
-
-  string line;
-  ifstream pmtposfile(fPMTPositionDataFile.c_str());
-  while (getline(pmtposfile, line)) {
-    if (line.empty() || line[0] == '#') continue;
-
-    istringstream sline(line);
-    sline >> pmtno >> coord_x >> coord_y >> coord_z >> nring >> region;
-
-    sprintf(PMTname, "InnerPMTPhys%d", pmtno);
-
-    G4double r =
-        sqrt(coord_x * coord_x + coord_y * coord_y + coord_z * coord_z);
-    G4double dx = -coord_x / r;
-    G4double dy = -coord_y / r;
-    G4double dz = -coord_z / r;
-
-    double angle_z = atan2(dx, dy);
-    double angle_x = atan2(dz, sqrt(dx * dx + dy * dy));
-
-    if (region != 0) {
-      // top or bottom PMTs
-      double normal_angle = (region > 0 ? -M_PI / 2 : M_PI / 2);
-      angle_x = normal_angle;
-    }
-    else {
-      angle_x = 0;
-    }
-
-    auto PMT_rotation = new G4RotationMatrix();
-    PMT_rotation->rotateZ(angle_z);
-    PMT_rotation->rotateX(M_PI / 2.0 - angle_x);
-
-    G4ThreeVector pmtpos(coord_x, coord_y, coord_z);
-
-    new G4PVPlacement(PMT_rotation, pmtpos, PMTname, _logiInnerPMT,
-                      BufferLiquidPhys, false, pmtno - 1, fGeomCheck);
-  }
+  ConstructDetector_LSC_PMT(BufferLiquidPhys, pmtsd);
 }

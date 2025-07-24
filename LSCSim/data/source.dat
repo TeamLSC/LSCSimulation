@@ -10,5 +10,5 @@ sourcez             0
 
 # energy range
 emin_source         1.8
-emax_source        10
+emax_source        3
 

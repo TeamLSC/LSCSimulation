@@ -1,0 +1,27 @@
+/control/verbose 1
+#/event/verbose 1
+
+/tracking/storeTrajectory 1
+
+/LSC/det/detector LSCC
+/LSC/det/geomcheck 0
+/LSC/det/geometrydata /home/cupsoft/Devs/lscdev/LSCSimulation/LSCSim/data/geometry_cylinder.dat
+/LSC/det/materialdata /home/cupsoft/Devs/lscdev/LSCSimulation/LSCSim/data/materials.dat
+/LSC/det/pmtposdata /home/cupsoft/Devs/lscdev/LSCSimulation/LSCSim/data/pmtpos_cylinder.dat
+
+/LSC/ROOT/savetrackopt  0
+/LSC/ROOT/savestepopt  0
+/LSC/ROOT/savehitphoton 1
+/LSC/ROOT/savescintstep 0
+
+/run/initialize
+
+/LSC/Scintillation/scinton 1
+/LSC/Cerenkov/cerenkovon 1
+
+/process/activate DeferTrackProc
+
+/generator/event_window 5000
+/generator/rates 3 1
+/generator/pos/set 9 "0 0 0"
+/generator/vtx/set 17 "gamma 0 0 0 1"
