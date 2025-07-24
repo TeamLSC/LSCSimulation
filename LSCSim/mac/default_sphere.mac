@@ -9,7 +9,7 @@
 /LSC/det/materialdata /home/cupsoft/Devs/lscdev/LSCSimulation/LSCSim/data/materials.dat
 /LSC/det/pmtposdata   /home/cupsoft/Devs/lscdev/LSCSimulation/LSCSim/data/pmtpos_sphere.dat
 /LSC/det/lightconcentrator false
-/LSC/det/lightconprofile "lc_string_40deg.txt"
+/LSC/det/lightconprofile lc_string_40deg.txt
 
 /LSC/ROOT/savetrackopt  0
 /LSC/ROOT/savestepopt  0

@@ -19,7 +19,8 @@ G4LogicalVolume* LightCon::Construct_LightCon(G4String ifname) {
     std::vector<G4double> r_vals, z_vals;
     std::ifstream infile((G4String) ifname);
     if (!infile.is_open()) {
-        G4Exception("LightCon::Construct_LightCon()", "GeomSolids0001", FatalException, "Could not open light concentrator profile file.");
+        G4Exception("LightCon::Construct_LightCon()", "GeomSolids0001", 
+                    FatalException, "Could not open light concentrator profile file.");
     }
     G4double x, z;
 
